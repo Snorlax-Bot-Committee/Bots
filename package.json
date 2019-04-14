@@ -1,0 +1,13 @@
+{
+  "name": "to-tally-tea",
+  "version": "0.1.0",
+  "description": "stab, drink, chew, repeat.",
+  "main": "app.js",
+  "author": "jennpeare",
+  "dependencies": {
+    "discord.js": "^11.4.2",
+    "request": "^2.88.0",
+    "request-promise": "^4.2.2",
+    "wikijs": "^4.10.2"
+  }
+}

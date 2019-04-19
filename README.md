@@ -22,3 +22,16 @@ creating silly puns and currency systems since 1992
 
 - [Tutorial](https://www.devdungeon.com/content/javascript-discord-bot-tutorial)
 - [discord.js Documentation](https://discord.js.org/#/docs/main/stable/general/welcome)
+
+
+# Json structure (tentative)
+12 points is the max and equal to 1 bubble tea,
+should look into doing some conversions and purging of points when a threshold is met
+
+{
+  "user": "JD or CR",
+  "totalPoints": 12, 
+  "command": "add points",
+  "message": "JS is a short wall",
+  "points": 4
+}

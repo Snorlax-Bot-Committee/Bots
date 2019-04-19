@@ -24,20 +24,26 @@ bot.on('message', message => {
 
   if (!message.content.startsWith(config.prefix)) return;
 
-  const args = message.content.slice(config.prefix.length).trim().split(/ +/g);
-  const commandText = args.shift().toLowerCase();
+  const format = RegExp(/(\w+)\s*(.*)?/);
 
-  // grab command from commander list
-  const cmd = commander.get(commandText);
+  if (format.test(message.content.trim())) {
+    const regexArray = format.exec(message.content.trim());
+    const args = regexArray[2] ? regexArray[2] : '';
 
-  // cmd does not exist
-  if (!cmd) {
-    messenger.sendText('move oolong, nothing to tea here...');
-    return;
-  };
+    // grab command from commander list
+    const cmd = commander.get(regexArray[1].toLowerCase());
 
-  // make sure run() is exported in [cmd].js
-  cmd.run(bot, message, args);
+    if (cmd) {
+      // make sure run() is exported in [cmd].js
+      cmd.run(bot, message, args);
+    } else {
+      messenger.sendText('move oolong, nothing to tea here...');
+    }
+  } else {
+    messenger.sendText('ah yes, ET\'s beloved ligature');
+  }
+
+  return;
 });
 
 bot.login(config.token);

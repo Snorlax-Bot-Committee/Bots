@@ -1,34 +1,34 @@
 const Messenger = require.main.require('./services/messenger.js');
 const config = require('../config.json');
-//const fs = require('fs');
-
-// let punsList = [];
-
-// const init = () => {
-//   console.log('reading puns file');
-//   let punsFile = JSON.parse(fs.readFileSync('./assets/puns.json'));
-//   punsList = punsFile.puns;
-// }
 
 const run = (bot, message, args) => {
-    const messenger = new Messenger(bot, message);
-    let userId = message.author.id;
-    if (userId == config.jdUserId || userId == config.crUserId) {
-      if (args.length == 2) {
-          messenger.sendText("adding " + args[0] + " points");
-          messenger.sendText("With message: " + args[1]);
-          console.log(args);
-        } else if (args.length == 1) {
-          messenger.sendText('Short Wall says "RIGGED", add a message to avoid this....');
-        } else {
-          messenger.sendText('Help.......');
-        }
-      }
-      else {
-        messenger.sendText("No bubbles for you!");
-      }
-    };
+  const messenger = new Messenger(bot, message);
+  const userId = message.author.id;
 
+  if (userId === config.jdUserId || userId === config.crUserId) {
+    const format = RegExp(/^(\d+)(?:\s*$|\s+(.*))/);
 
-    module.exports.run = run;
-    //module.exports.init = init;
+    if (format.test(args)) {
+      const regexArray = format.exec(args);
+      const points = (regexArray[1] ? regexArray[1] : null);
+      const reason = (regexArray[2] ? regexArray[2] : null);
+
+      if (reason) {
+        messenger.sendText(`${points} points added - "${reason}"`);
+      } else {
+        messenger.sendText('Short Wall says "RIGGED", add a message to avoid her glare...');
+      }
+    } else {
+      if (args.startsWith('-')) {
+        messenger.sendText('`&remove [integer] [message]`');
+      } else {
+        messenger.sendText('`&add [integer] [message]`');
+      }
+    }
+  }
+  else {
+    messenger.sendText('No bubbles for you!');
+  }
+};
+
+module.exports.run = run;

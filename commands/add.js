@@ -60,6 +60,7 @@ const run = (bot, message, args) => {
     messenger.sendText('No bubbles for you!');
   }
   client.close();
+  console.log("DB connection closed");
 };
 
 module.exports.run = run;

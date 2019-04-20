@@ -1,7 +1,9 @@
-const Discord = require('discord.js')
+const Discord = require('discord.js');
 const config = require('./config.json');
+//const db = require('./dbConnection.js');
 const Commander = require('./services/commander.js');
 const Messenger = require('./services/messenger.js');
+
 
 const bot = new Discord.Client();
 const commander = new Commander();
@@ -11,6 +13,8 @@ bot.on('ready', () => {
 
   // register all commands in the commands dir
   commander.register();
+
+  //db.connectToDB();
 });
 
 bot.on('message', message => {

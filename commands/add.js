@@ -22,25 +22,45 @@ const run = (bot, message, args) => {
         client.connect(function (err) {
           console.log("connected to DB")
           const db = client.db(dbName);
+          var total = 1000;
+          var result = db.collection('moonDad').find().limit(1).sort({$natural:-1}).toArray();
+          var total = result.previousTotal;
+          console.log(total);
+          //db.collection('moonDad').find().limit(1).sort({$natural:-1}).toArray(function(err, docs){
+            //console.log("retrieved records:");
+            //console.log(docs);
+            //console.log("inside the loop total: " + docs[0].previousTotal);
+          //   if(!err) {
+          //     result = docs;
+          //   }
+          // });
           messenger.sendText(`${points} points added - "${reason}"`);
           if (userId === config.jdUserId) {
             collectionName = 'moonDad';
+            console.log("result " + result);
             db.collection(collectionName).insertOne({
-              "name": message.author.name,
-              "total": 0,
+              "name": message.author.username,
+              "previousTotal": total,
               "command": "add points",
               "message": reason,
-              "points": points
+              "points": parseInt(points),
+              "newTotal": parseInt(total + points)
             });
             console.log('added to db');
           } else if (userId === config.crUserId) {
             collectionName = 'misterMeter';
+            db.collection(collectionName).find().limit(1).sort({$natural:-1}).toArray(function(err, docs){
+              console.log("retrieved records:");
+              console.log(docs);
+            });
+            total = docs[2];
             db.collection(collectionName).insertOne({
-              "name": message.author.name,
-              "total": 0,
+              "name": message.author.username,
+              "previousTotal": total,
               "command": "add points",
               "message": reason,
-              "points": points
+              "points": points.parseInt(),
+              "newTotal": (total + points).parseInt()
             });
             console.log('added to db');
           }

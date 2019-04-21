@@ -18,6 +18,8 @@ const run = (bot, message, args) => {
       const points = (regexArray[1] ? regexArray[1] : null);
       const reason = (regexArray[2] ? regexArray[2] : null);
       let collectionName;
+      let total;
+      let docs;
       if (reason) {
         client.connect(function (err) {
           console.log("connected to DB")
@@ -25,22 +27,42 @@ const run = (bot, message, args) => {
           messenger.sendText(`${points} points removed - "${reason}"`);
           if (userId === config.jdUserId) {
             collectionName = 'moonDad';
+            db.collection(collectionName).find().limit(1).sort({$natural:-1}).toArray(function(err, docs){
+              console.log("retrieved records:");
+              console.log(docs);
+            });
+            if(typeof docs !== "undefined") {
+              total = docs[0].previousTotal;
+            } else {
+              total = 0;
+            }
             db.collection(collectionName).insertOne({
-              "name": message.author.name,
-              "total": 0,
+              "name": message.author.username,
+              "previousTotal": total,
               "command": "remove points",
               "message": reason,
-              "points": points
+              "points": parseInt(points),
+              "newTotal": parseInt(total - points)
             });
             console.log('added to db');
           } else if (userId === config.crUserId) {
             collectionName = 'misterMeter';
+            db.collection(collectionName).find().limit(1).sort({$natural:-1}).toArray(function(err, docs){
+              console.log("retrieved records:");
+              console.log(docs);
+            });
+            if(typeof docs !== "undefined") {
+              total = docs[2];
+            } else {
+              total = 0;
+            }
             db.collection(collectionName).insertOne({
-              "name": message.author.name,
-              "total": 0,
+              "name": message.author.username,
+              "previousTotal": total,
               "command": "remove points",
               "message": reason,
-              "points": points
+              "points": points.parseInt(),
+              "newTotal": (total + points).parseInt()
             });
             console.log('added to db');
           }
